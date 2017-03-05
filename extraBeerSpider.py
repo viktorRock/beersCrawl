@@ -66,30 +66,24 @@ class extraBeerSpider(scrapy.Spider):
 
         #extracting prices
         productIds = ','.join(response.css('div.hproduct::attr(id)').extract())
-        api_prodPriceUrl = 'http://preco.api-extra.com.br/V1/Produtos/PrecoVenda/?IdsProduto=' + productIds
 
-        resp = requests.get(api_prodPriceUrl)
-        if resp.status_code != 200:
-            # This means something went wrong.
-            raise ApiError('GET /tasks/ {}'.format(resp.status_code))
-            for todo_item in resp.json():
-                print('{} {}'.format(todo_item['id'], todo_item['summary']))
-        json_resp = resp.json()
-        dictPrices = dict()
-        for dictObj in json_resp['PrecoProdutos']:
-            dictPrices[str(dictObj['PrecoVenda']['IdProduto'])] = dictObj
-        del json_resp
-        del resp
+       
+        #json_resp = resp.json()
+        #dictPrices = dict()
+        #for dictObj in json_resp['PrecoProdutos']:
+        #    dictPrices[str(dictObj['PrecoVenda']['IdProduto'])] = dictObj
+        #del json_resp
+        #del resp
 
         #for product in response.css('//div[@class="hproduct"]'):
         for product in response.css('div.hproduct'):
             productId = product.css('::attr(id)').extract_first()
-            price = dictPrices[productId]['PrecoVenda']['Preco']
+            #price = dictPrices[productId]['PrecoVenda']['Preco']
             productDict = {
                 'Name': product.css('a.link.url::attr(title)').extract_first(),
                 'Id': productId,
                 'Link': product.css('a.link.url::attr(href)').extract_first(),
-                'Price': price,
+                #'Price': price,
             }
             yield productDict
             if self.fileMode:
